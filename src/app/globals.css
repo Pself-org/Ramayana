@@ -7,14 +7,14 @@
 
 @layer base {
   :root {
-    /* Brand Palette - Ram Navami Theme */
-    --color-cosmos: #9D0208;       /* Deep Red/Brown */
-    --color-cosmos-dark: #6A040F;
-    --color-saffron: #FFBA08;      /* Bright Golden Yellow */
-    --color-saffron-light: #FFEA00;
-    --color-charcoal: #DF5D0E;     /* Vibrant Orange (Main Background) */
-    --color-pearl: #FFFFFF;        /* Pure White */
-    --color-pearl-dim: #FFDAB9;
+    /* Brand Palette - Vibrant Saffron Theme */
+    --color-cosmos: #6A2203;       /* Deep brown-red accents */
+    --color-cosmos-dark: #4A1500;
+    --color-saffron: #FFCC00;      /* Bright gold highlights */
+    --color-saffron-light: #FFDD33;
+    --color-charcoal: #F47B20;     /* Vibrant Saffron background */
+    --color-pearl: #FFFFFF;        /* Pure white text */
+    --color-pearl-dim: #FFEACB;    /* Subdued white/orange tint */
 
     /* Typography */
     --font-poppins: 'Poppins', sans-serif;
@@ -32,13 +32,13 @@
 
 @theme {
   /* TailwindCSS v4 theme extension */
-  --color-cosmos: #9D0208;
-  --color-cosmos-dark: #6A040F;
-  --color-saffron: #FFBA08;
-  --color-saffron-light: #FFEA00;
-  --color-charcoal: #DF5D0E;
+  --color-cosmos: #6A2203;
+  --color-cosmos-dark: #4A1500;
+  --color-saffron: #FFCC00;
+  --color-saffron-light: #FFDD33;
+  --color-charcoal: #F47B20;
   --color-pearl: #FFFFFF;
-  --color-pearl-dim: #FFDAB9;
+  --color-pearl-dim: #FFEACB;
 
   --font-poppins: 'Poppins', sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
@@ -166,15 +166,15 @@ h3, h4, h5, h6 {
 
 .card {
   border-radius: var(--radius-card);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(238, 170, 0, 0.1);
+  background: var(--color-cosmos);
+  border: 1px solid rgba(255, 204, 0, 0.2);
   overflow: hidden;
   transition: border-color var(--transition-base), 
               transform var(--transition-base),
               box-shadow var(--transition-base);
 }
 .card:hover {
-  border-color: rgba(238, 170, 0, 0.35);
+  border-color: rgba(255, 204, 0, 0.5);
   transform: translateY(-4px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
 }

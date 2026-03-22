@@ -66,6 +66,10 @@ export function Footer() {
         >
           {/* Brand column */}
           <div>
+            <div style={{ marginBottom: '1rem' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Ramayana Odyssey Logo" width={96} height={96} style={{ objectFit: 'contain', display: 'block' }} />
+            </div>
             <div
               style={{
                 fontFamily: 'var(--font-poppins)',

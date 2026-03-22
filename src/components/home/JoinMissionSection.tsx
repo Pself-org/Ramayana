@@ -15,8 +15,6 @@ const missionCards = [
       'A curated email every week — one shloka, one insight, one video summary. The Ramayana, delivered straight to your inbox.',
     cta: 'Subscribe Now',
     action: 'subscribe',
-    gradient: 'linear-gradient(135deg, rgba(26,35,126,0.5) 0%, rgba(26,35,126,0.2) 100%)',
-    border: 'rgba(26,35,126,0.5)',
   },
   {
     id: 'study',
@@ -27,8 +25,6 @@ const missionCards = [
       'Join interactive Zoom sessions on the Ramayana. Two tracks — one for adults seeking wisdom, one for children beginning their journey.',
     cta: 'View Class Schedule',
     href: '/media/live-classes',
-    gradient: 'linear-gradient(135deg, rgba(238,170,0,0.15) 0%, rgba(238,170,0,0.05) 100%)',
-    border: 'rgba(238,170,0,0.3)',
   },
   {
     id: 'volunteer',
@@ -39,8 +35,6 @@ const missionCards = [
       'Translators, researchers, designers, social media creators — if you love the Ramayana, there is a place for you in this Odyssey.',
     cta: 'Apply Now',
     href: '/about/support#volunteer',
-    gradient: 'linear-gradient(135deg, rgba(100,60,100,0.3) 0%, rgba(28,28,28,0) 100%)',
-    border: 'rgba(180,100,180,0.2)',
   },
 ]
 
@@ -114,8 +108,6 @@ export function JoinMissionSection() {
                   className="card"
                   style={{
                     padding: '2.25rem',
-                    background: card.gradient,
-                    borderColor: card.border,
                     display: 'flex',
                     flexDirection: 'column',
                   }}

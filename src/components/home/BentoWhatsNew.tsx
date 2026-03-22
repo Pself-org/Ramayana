@@ -25,7 +25,6 @@ export function BentoWhatsNew({ podcast, video, chant, article }: BentoWhatsNewP
           gridColumn: 'span 7',
           gridRow: 'span 1',
           padding: '2rem',
-          background: 'linear-gradient(135deg, rgba(26,35,126,0.4) 0%, rgba(28,28,28,0) 100%)',
           minHeight: '220px',
           display: 'flex',
           flexDirection: 'column',
@@ -157,7 +156,6 @@ export function BentoWhatsNew({ podcast, video, chant, article }: BentoWhatsNewP
         style={{
           gridColumn: 'span 4',
           padding: '1.5rem',
-          background: 'linear-gradient(135deg, rgba(238,170,0,0.08) 0%, rgba(28,28,28,0) 100%)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem' }}>
@@ -190,7 +188,6 @@ export function BentoWhatsNew({ podcast, video, chant, article }: BentoWhatsNewP
           alignItems: 'center',
           justifyContent: 'center',
           padding: '1.5rem',
-          background: 'linear-gradient(to bottom, rgba(26,35,126,0.25), rgba(28,28,28,0))',
           position: 'relative',
           overflow: 'hidden',
         }}

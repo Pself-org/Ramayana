@@ -95,21 +95,35 @@ export function HeroSection() {
             Pillar I of Project Self
           </div>
 
-          {/* Main Headline */}
-          <h1
-            style={{
-              fontFamily: 'var(--font-poppins)',
-              fontWeight: 700,
-              fontSize: 'clamp(2.5rem, 7vw, 5rem)',
-              color: 'var(--color-saffron)',
-              lineHeight: 1.1,
-              marginBottom: '1rem',
-              animation: 'fadeInUp 0.7s 0.1s ease both',
-              textShadow: '0 0 60px rgba(238,170,0,0.25)',
-            }}
-          >
-            The Ramayana Odyssey
-          </h1>
+          {/* Main Headline & Logo */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/logo.png" 
+              alt="Ramayana Odyssey" 
+              width={180} 
+              height={180} 
+              style={{ 
+                objectFit: 'contain', 
+                marginBottom: '1.5rem',
+                animation: 'fadeInUp 0.65s 0.05s ease both'
+              }} 
+            />
+            <h1
+              style={{
+                fontFamily: 'var(--font-poppins)',
+                fontWeight: 700,
+                fontSize: 'clamp(2.5rem, 7vw, 5rem)',
+                color: 'var(--color-saffron)',
+                lineHeight: 1.1,
+                marginBottom: '1rem',
+                animation: 'fadeInUp 0.7s 0.1s ease both',
+                textShadow: '0 0 60px rgba(238,170,0,0.25)',
+              }}
+            >
+              The Ramayana Odyssey
+            </h1>
+          </div>
 
           {/* Sub-tagline */}
           <p

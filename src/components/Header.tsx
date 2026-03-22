@@ -83,15 +83,15 @@ export function Header() {
             justifyContent: 'space-between',
           }}
         >
-          {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+        {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', textDecoration: 'none' }}>
             <RamayanaLogo />
             <div>
               <div
                 style={{
                   fontFamily: 'var(--font-poppins)',
                   fontWeight: 700,
-                  fontSize: '1.1rem',
+                  fontSize: '1.4rem',
                   color: 'var(--color-saffron)',
                   lineHeight: 1.1,
                   letterSpacing: '-0.01em',
@@ -103,9 +103,10 @@ export function Header() {
                 style={{
                   fontFamily: 'var(--font-baskerville)',
                   fontStyle: 'italic',
-                  fontSize: '0.68rem',
-                  color: 'rgba(245,245,245,0.65)',
+                  fontSize: '0.85rem',
+                  color: 'rgba(245,245,245,0.7)',
                   letterSpacing: '0.03em',
+                  marginTop: '0.125rem'
                 }}
               >
                 Rama's Path. Timeless Wisdom.
@@ -293,8 +294,8 @@ function RamayanaLogo() {
     <img
       src="/logo.png"
       alt="Ramayana Odyssey Logo"
-      width={52}
-      height={52}
+      width={72}
+      height={72}
       style={{ objectFit: 'contain', display: 'block' }}
     />
   )
