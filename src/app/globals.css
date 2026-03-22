@@ -7,14 +7,14 @@
 
 @layer base {
   :root {
-    /* Brand Palette - Vibrant Saffron Theme */
-    --color-cosmos: #6A2203;       /* Deep brown-red accents */
-    --color-cosmos-dark: #4A1500;
-    --color-saffron: #FFCC00;      /* Bright gold highlights */
-    --color-saffron-light: #FFDD33;
-    --color-charcoal: #F47B20;     /* Vibrant Saffron background */
-    --color-pearl: #FFFFFF;        /* Pure white text */
-    --color-pearl-dim: #FFEACB;    /* Subdued white/orange tint */
+    /* Brand Palette - Original Brand Kit Theme */
+    --color-cosmos: #1A237E;       /* Deep Cosmos Blue */
+    --color-cosmos-dark: #121858;
+    --color-saffron: #EEAA00;      /* Saffron Gold */
+    --color-saffron-light: #FFCA28;
+    --color-charcoal: #1C1C1C;     /* Immersive Background */
+    --color-pearl: #F5F5F5;        /* Light Text */
+    --color-pearl-dim: #D5D5D5;    /* Dim Text */
 
     /* Typography */
     --font-poppins: 'Poppins', sans-serif;
@@ -32,13 +32,13 @@
 
 @theme {
   /* TailwindCSS v4 theme extension */
-  --color-cosmos: #6A2203;
-  --color-cosmos-dark: #4A1500;
-  --color-saffron: #FFCC00;
-  --color-saffron-light: #FFDD33;
-  --color-charcoal: #F47B20;
-  --color-pearl: #FFFFFF;
-  --color-pearl-dim: #FFEACB;
+  --color-cosmos: #1A237E;
+  --color-cosmos-dark: #121858;
+  --color-saffron: #EEAA00;
+  --color-saffron-light: #FFCA28;
+  --color-charcoal: #1C1C1C;
+  --color-pearl: #F5F5F5;
+  --color-pearl-dim: #D5D5D5;
 
   --font-poppins: 'Poppins', sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
