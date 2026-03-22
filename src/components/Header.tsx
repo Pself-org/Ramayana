@@ -292,10 +292,10 @@ function RamayanaLogo() {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logo.png"
+      src="/New-Ramayana-Logo.png"
       alt="Ramayana Odyssey Logo"
-      width={72}
-      height={72}
+      width={120}
+      height={120}
       style={{ objectFit: 'contain', display: 'block' }}
     />
   )

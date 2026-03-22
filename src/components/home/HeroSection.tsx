@@ -5,12 +5,32 @@ import { ArrowRight, Mail } from 'lucide-react'
 import { SubscribeModal } from '../SubscribeModal'
 
 export function HeroSection() {
-  const [subscribeOpen, setSubscribeOpen] = useState(false)
-  const [email, setEmail] = useState('')
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '' })
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
-  function handleQuickSubscribe(e: React.FormEvent) {
+  async function handleSubscribe(e: React.FormEvent) {
     e.preventDefault()
-    setSubscribeOpen(true)
+    if (!form.email || !form.firstName || !form.lastName) return
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, source: 'homepage' }),
+      })
+      if (res.ok) {
+        setStatus('success')
+        setForm({ firstName: '', lastName: '', email: '' })
+      } else {
+        setStatus('error')
+        const data = await res.json()
+        setErrorMsg(data.error || 'Something went wrong.')
+      }
+    } catch {
+      setStatus('error')
+      setErrorMsg('Network error.')
+    }
   }
 
   return (
@@ -99,10 +119,10 @@ export function HeroSection() {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="/logo.png" 
+              src="/New-Ramayana-Logo.png" 
               alt="Ramayana Odyssey" 
-              width={180} 
-              height={180} 
+              width={360} 
+              height={360} 
               style={{ 
                 objectFit: 'contain', 
                 marginBottom: '1.5rem',
@@ -157,7 +177,7 @@ export function HeroSection() {
 
           {/* Email Capture Form */}
           <form
-            onSubmit={handleQuickSubscribe}
+            onSubmit={handleSubscribe}
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -170,37 +190,61 @@ export function HeroSection() {
               style={{
                 display: 'flex',
                 width: '100%',
-                maxWidth: '480px',
+                maxWidth: '640px',
                 gap: '0.625rem',
                 flexWrap: 'wrap',
                 justifyContent: 'center',
               }}
             >
               <input
-                id="hero-email-input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
+                type="text"
+                value={form.firstName}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                placeholder="First Name"
+                required
                 className="input-field"
-                style={{
-                  flex: '1 1 240px',
-                  minWidth: '0',
-                  fontSize: '1rem',
-                  padding: '0.875rem 1.125rem',
-                }}
+                style={{ flex: '1 1 130px', minWidth: '0', fontSize: '0.95rem', padding: '0.875rem 1.125rem' }}
+              />
+              <input
+                type="text"
+                value={form.lastName}
+                onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                placeholder="Last Name"
+                required
+                className="input-field"
+                style={{ flex: '1 1 130px', minWidth: '0', fontSize: '0.95rem', padding: '0.875rem 1.125rem' }}
+              />
+              <input
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="Email Address"
+                required
+                className="input-field"
+                style={{ flex: '2 1 180px', minWidth: '0', fontSize: '0.95rem', padding: '0.875rem 1.125rem' }}
               />
               <button
                 type="submit"
+                disabled={status === 'loading'}
                 className="btn-primary"
-                id="hero-subscribe-btn"
-                style={{ flex: '0 0 auto', padding: '0.875rem 1.5rem' }}
+                style={{ flex: '1 1 140px', padding: '0.875rem 1.5rem' }}
               >
-                <Mail size={16} />
-                Subscribe
-                <ArrowRight size={16} />
+                {status === 'loading' ? 'Subscribing...' : (
+                  <><Mail size={16} /> Subscribe <ArrowRight size={16} /></>
+                )}
               </button>
             </div>
+            
+            {status === 'success' && (
+              <p style={{ color: 'var(--color-saffron)', fontFamily: 'var(--font-montserrat)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                🙏 Welcome to the Odyssey! Check your inbox.
+              </p>
+            )}
+            {status === 'error' && (
+              <p style={{ color: '#ff7b7b', fontFamily: 'var(--font-montserrat)', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                {errorMsg || 'Something went wrong.'}
+              </p>
+            )}
             <p
               style={{
                 fontFamily: 'var(--font-montserrat)',
@@ -232,7 +276,6 @@ export function HeroSection() {
         </div>
       </section>
 
-      <SubscribeModal open={subscribeOpen} onClose={() => setSubscribeOpen(false)} />
     </>
   )
 }

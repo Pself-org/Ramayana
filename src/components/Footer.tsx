@@ -21,22 +21,22 @@ const socialLinks = [
 ]
 
 export function Footer() {
-  const [email, setEmail] = useState('')
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '' })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!email) return
+    if (!form.email || !form.firstName || !form.lastName) return
     setStatus('loading')
     try {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'footer' }),
+        body: JSON.stringify({ ...form, source: 'footer' }),
       })
       if (res.ok) {
         setStatus('success')
-        setEmail('')
+        setForm({ firstName: '', lastName: '', email: '' })
       } else {
         setStatus('error')
       }
@@ -68,7 +68,7 @@ export function Footer() {
           <div>
             <div style={{ marginBottom: '1rem' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Ramayana Odyssey Logo" width={96} height={96} style={{ objectFit: 'contain', display: 'block' }} />
+              <img src="/New-Ramayana-Logo.png" alt="Ramayana Odyssey Logo" width={180} height={180} style={{ objectFit: 'contain', display: 'block' }} />
             </div>
             <div
               style={{
@@ -273,10 +273,36 @@ export function Footer() {
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 <input
+                  id="footer-first-name"
+                  type="text"
+                  value={form.firstName}
+                  onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                  placeholder="First Name"
+                  required
+                  className="input-field"
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                  }}
+                />
+                <input
+                  id="footer-last-name"
+                  type="text"
+                  value={form.lastName}
+                  onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                  placeholder="Last Name"
+                  required
+                  className="input-field"
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                  }}
+                />
+                <input
                   id="footer-subscribe-email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="your@email.com"
                   required
                   className="input-field"
