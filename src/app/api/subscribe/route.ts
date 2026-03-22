@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         email,
         firstName,
         lastName,
-        source,
+        source: source as any,
         subscribedAt: new Date().toISOString(),
         active: true,
       },

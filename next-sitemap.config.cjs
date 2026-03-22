@@ -11,4 +11,4 @@ const config = {
   exclude: ['/admin/*'],
 }
 
-export default config
+module.exports = config
