@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'Downloadable Ramayana infographics — family trees, Dharma maps, and visual guides.',
 }
 
-const infographics = [
+const infographicsList = [
   { id: 'family-tree', title: 'Raghu Vamsha Family Tree', description: 'The complete lineage from Brahma to Lord Rama and beyond.', emoji: '🌳', available: false },
   { id: 'dharma-map', title: 'Dharma in the Ramayana', description: 'A visual guide to how Dharma is upheld and tested across all 7 Kandas.', emoji: '⚖️', available: false },
   { id: 'characters', title: 'Key Characters of Lanka', description: 'Ravana\'s court, his army, and his family — the antagonists of the epic.', emoji: '👑', available: false },
@@ -25,7 +25,7 @@ export default function InfographicsPage() {
       </div>
 
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem 5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-        {infographics.map((item) => (
+        {infographicsList.map((item) => (
           <div key={item.id} className="card" style={{ padding: '2rem', opacity: item.available ? 1 : 0.7 }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{item.emoji}</div>
             <h3 style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-pearl)', marginBottom: '0.625rem' }}>

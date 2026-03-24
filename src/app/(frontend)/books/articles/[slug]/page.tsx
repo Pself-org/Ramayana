@@ -3,21 +3,30 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { ArcherDivider } from '@/components/ArcherDivider'
+import { getDb } from '@/db'
+import { articles as articlesTable } from '@/db/schema'
+import { eq, and } from 'drizzle-orm'
 
 interface Props {
   params: Promise<{ slug: string }>
 }
 
 async function getArticle(slug: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'
   try {
-    const res = await fetch(
-      `${baseUrl}/api/articles?where[slug][equals]=${slug}&where[status][equals]=published&limit=1`,
-      { next: { revalidate: 60 } },
-    )
-    const data = await res.json()
-    return data.docs?.[0] || null
-  } catch {
+    const db = await getDb()
+    const rows = await db.select()
+      .from(articlesTable)
+      .where(
+        and(
+          eq(articlesTable.slug, slug),
+          eq(articlesTable.status, 'published')
+        )
+      )
+      .limit(1)
+    
+    return rows[0] || null
+  } catch (error) {
+    console.error('⚠️ Could not fetch article detail (Database unavailable during build):', error)
     return null
   }
 }
@@ -59,25 +68,6 @@ export default async function ArticlePage({ params }: Props) {
           <ArrowLeft size={16} /> Back to Library
         </Link>
         <header style={{ marginBottom: '3rem' }}>
-          {article.category && (
-            <div
-              style={{
-                display: 'inline-block',
-                padding: '0.25rem 0.875rem',
-                background: 'rgba(238,170,0,0.15)',
-                borderRadius: '2rem',
-                fontFamily: 'var(--font-montserrat)',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: '#b8860b',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: '1.25rem',
-              }}
-            >
-              {article.category}
-            </div>
-          )}
           <h1
             style={{
               fontFamily: 'var(--font-poppins)',
@@ -102,26 +92,13 @@ export default async function ArticlePage({ params }: Props) {
               paddingBottom: '1.5rem',
             }}
           >
-            {article.author && <span>✍️ By {article.author}</span>}
             {article.publishedAt && (
               <span>
                 📅 {new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date(article.publishedAt))}
               </span>
             )}
-            {article.readingTime && <span>⏱ {article.readingTime} read</span>}
           </div>
         </header>
-
-        {article.featuredImage && (
-          <div style={{ marginBottom: '3rem', borderRadius: '1rem', overflow: 'hidden' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={article.featuredImage.url}
-              alt={article.featuredImage.alt || article.title}
-              style={{ width: '100%', height: 'auto', display: 'block' }}
-            />
-          </div>
-        )}
 
         <div
           style={{
@@ -131,12 +108,14 @@ export default async function ArticlePage({ params }: Props) {
             color: '#2a2a30',
           }}
           className="article-body"
-          dangerouslySetInnerHTML={{ __html: '' }} // Requires payload's lexical-to-html conversion or rich-text-react renderer
         >
-          {/* Article content (Lexical JSON) goes here - needs serialization component */}
-          <div style={{ background: 'rgba(26,35,126,0.05)', padding: '2rem', borderRadius: '0.75rem', textAlign: 'center' }}>
-            [Article text will render here from Payload CMS. A Lexical-HTML serializer is usually mapped here.]
-          </div>
+          {article.content ? (
+             <div dangerouslySetInnerHTML={{ __html: article.content }} />
+          ) : (
+             <div style={{ background: 'rgba(26,35,126,0.05)', padding: '2rem', borderRadius: '0.75rem', textAlign: 'center' }}>
+               Content coming soon.
+             </div>
+          )}
         </div>
 
         <div style={{ marginTop: '4rem' }}>

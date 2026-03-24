@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { Music } from 'lucide-react'
+import { getDb } from '@/db'
+import { audioTracks as audioTracksTable } from '@/db/schema'
+import { eq, desc, and } from 'drizzle-orm'
 
 export const metadata: Metadata = {
   title: 'Vedic Chants & Shlokas',
@@ -9,15 +12,20 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 async function getChants() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'
   try {
-    const res = await fetch(
-      `${baseUrl}/api/audio-tracks?where[status][equals]=published&where[category][equals]=chant&sort=-publishedAt&limit=50`,
-      { next: { revalidate: 60 } },
-    )
-    const data = await res.json()
-    return data.docs || []
-  } catch {
+    const db = await getDb()
+    return await db.select()
+      .from(audioTracksTable)
+      .where(
+        and(
+          eq(audioTracksTable.status, 'published'),
+          eq(audioTracksTable.category, 'chant')
+        )
+      )
+      .orderBy(desc(audioTracksTable.publishedAt))
+      .limit(50)
+  } catch (error) {
+    console.error('⚠️ Could not fetch chants (Database unavailable during build):', error)
     return []
   }
 }
@@ -46,42 +54,21 @@ export default async function ChantsPage() {
             <p style={{ fontFamily: 'var(--font-montserrat)', fontSize: '1.1rem', color: 'rgba(245,245,245,0.5)' }}>Sacred chants are being recorded. Coming soon.</p>
           </div>
         ) : (
-          chants.map((chant: { id: string; title: string; audioUrl: string; lyricsSanskrit?: string; lyricsTransliteration?: string; lyricsEnglish?: string; meaning?: string; artist?: string }) => (
+          chants.map((chant) => (
             <div key={chant.id} className="card" style={{ padding: '2rem', background: 'linear-gradient(to bottom right, rgba(238,170,0,0.06), rgba(28,28,28,0))' }}>
               <h2 style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-saffron)', marginBottom: '0.5rem' }}>
                 {chant.title}
               </h2>
-              {chant.artist && (
-                <p style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.8rem', color: 'rgba(245,245,245,0.5)', marginBottom: '1rem' }}>
-                  by {chant.artist}
-                </p>
+              {chant.trackUrl && (
+                <audio controls style={{ width: '100%', marginBottom: '1.5rem', accentColor: '#EEAA00' }}>
+                  <source src={chant.trackUrl} type="audio/mpeg" />
+                </audio>
               )}
-              {/* Audio player */}
-              <audio controls style={{ width: '100%', marginBottom: '1.5rem', accentColor: '#EEAA00' }}>
-                <source src={chant.audioUrl} type="audio/mpeg" />
-              </audio>
-              {/* Lyrics display */}
               {chant.lyricsSanskrit && (
                 <div style={{ marginBottom: '1rem' }}>
                   <div style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-saffron)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Sanskrit</div>
                   <p style={{ fontFamily: 'var(--font-baskerville)', fontStyle: 'italic', fontSize: '1.05rem', color: 'rgba(238,170,0,0.85)', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
                     {chant.lyricsSanskrit}
-                  </p>
-                </div>
-              )}
-              {chant.lyricsTransliteration && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <div style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.68rem', fontWeight: 700, color: 'rgba(245,245,245,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Transliteration</div>
-                  <p style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.9rem', color: 'rgba(245,245,245,0.7)', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
-                    {chant.lyricsTransliteration}
-                  </p>
-                </div>
-              )}
-              {chant.lyricsEnglish && (
-                <div>
-                  <div style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-pearl)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>English Meaning</div>
-                  <p style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.9rem', color: 'rgba(245,245,245,0.75)', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
-                    {chant.lyricsEnglish}
                   </p>
                 </div>
               )}

@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { getDb } from '@/db'
+import { articles as articlesTable } from '@/db/schema'
+import { eq, desc } from 'drizzle-orm'
 
 export const metadata: Metadata = {
   title: 'Articles & Essays',
@@ -9,15 +12,15 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 async function getArticles() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'
   try {
-    const res = await fetch(
-      `${baseUrl}/api/articles?where[status][equals]=published&sort=-publishedAt&limit=50`,
-      { next: { revalidate: 60 } },
-    )
-    const data = await res.json()
-    return data.docs || []
-  } catch {
+    const db = await getDb()
+    return await db.select()
+      .from(articlesTable)
+      .where(eq(articlesTable.status, 'published'))
+      .orderBy(desc(articlesTable.publishedAt))
+      .limit(50)
+  } catch (error) {
+    console.error('⚠️ Could not fetch articles (Database unavailable during build):', error)
     return []
   }
 }
@@ -28,7 +31,6 @@ export default async function ArticlesPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-pearl)' }} className="educational-mode">
       <div style={{ paddingTop: '72px' }} />
-      {/* Header — stays in charcoal for contrast */}
       <div style={{ background: 'var(--color-charcoal)', padding: '4rem 1.5rem 3rem', textAlign: 'center' }}>
         <h1 style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: 'clamp(2rem, 5vw, 3rem)', color: 'var(--color-pearl)', marginBottom: '0.875rem' }}>
           Articles & Essays
@@ -38,7 +40,6 @@ export default async function ArticlesPage() {
         </p>
       </div>
 
-      {/* Educational Mode content area */}
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '3rem 1.5rem 5rem' }}>
         {articles.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '6rem 2rem' }}>
@@ -47,7 +48,7 @@ export default async function ArticlesPage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            {articles.map((article: { id: string; title: string; slug: string; excerpt?: string; author?: string; publishedAt?: string; readingTime?: string; category?: string }) => (
+            {articles.map((article) => (
               <article
                 key={article.id}
                 style={{
@@ -55,22 +56,13 @@ export default async function ArticlesPage() {
                   paddingBottom: '2rem',
                 }}
               >
-                {article.category && (
-                  <div style={{ display: 'inline-block', padding: '0.15rem 0.625rem', background: 'rgba(238,170,0,0.15)', borderRadius: '1rem', fontFamily: 'var(--font-montserrat)', fontSize: '0.7rem', fontWeight: 700, color: '#b8860b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem' }}>
-                    {article.category}
-                  </div>
-                )}
                 <h2 style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: '1.4rem', color: 'var(--color-cosmos)', marginBottom: '0.625rem', lineHeight: 1.3 }}>
-                  <Link href={`/books/articles/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-saffron)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-cosmos)')}
-                  >
+                  <Link href={`/books/articles/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     {article.title}
                   </Link>
                 </h2>
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontFamily: 'var(--font-montserrat)', fontSize: '0.78rem', color: 'rgba(26,35,126,0.5)', marginBottom: '0.875rem' }}>
-                  {article.author && <span>✍️ {article.author}</span>}
-                  {article.readingTime && <span>⏱ {article.readingTime}</span>}
+                   {article.publishedAt && <span>📅 {new Date(article.publishedAt).toLocaleDateString()}</span>}
                 </div>
                 {article.excerpt && (
                   <p style={{ fontFamily: 'var(--font-montserrat)', fontSize: '0.95rem', color: 'rgba(26,35,126,0.75)', lineHeight: 1.75, marginBottom: '1rem' }}>
