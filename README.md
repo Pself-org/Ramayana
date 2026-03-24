@@ -14,8 +14,10 @@ Pillar I of Project Self. An immersive content hub and platform bringing the anc
 
 ### 1. Install Dependencies
 
+You MUST use `--legacy-peer-deps` due to older React peer dependencies from Drizzle ORM overriding React 19.
+
 ```bash
-pnpm install
+npm install --legacy-peer-deps
 ```
 
 ### 2. Environment Setup
@@ -36,13 +38,13 @@ Fill in the values:
 Push the Drizzle schema to your MySQL database:
 
 ```bash
-pnpm run db:push
+npm run db:push
 ```
 
 ### 4. Start the Development Server
 
 ```bash
-pnpm run dev
+npm run dev
 ```
 
 The site will run on `http://localhost:3001`.
@@ -50,10 +52,10 @@ The site will run on `http://localhost:3001`.
 ## Database Management
 
 ```bash
-pnpm run db:push       # Push schema changes to DB
-pnpm run db:generate   # Generate migration files
-pnpm run db:migrate    # Run pending migrations
-pnpm run db:studio     # Open Drizzle Studio (visual DB editor)
+npm run db:push       # Push schema changes to DB
+npm run db:generate   # Generate migration files
+npm run db:migrate    # Run pending migrations
+npm run db:studio     # Open Drizzle Studio (visual DB editor)
 ```
 
 ## Technology Stack
@@ -67,9 +69,9 @@ pnpm run db:studio     # Open Drizzle Studio (visual DB editor)
 
 ## Deployment (Hostinger Node.js Hosting)
 
-1. Create a MySQL database in Hostinger hPanel
-2. Import the GitHub repo via hPanel → Websites → Add Website → Node.js App
-3. Set environment variables in hPanel app settings
-4. Hostinger auto-runs `pnpm install` + `pnpm run build`
-5. Start command: `node server.js`
-6. After first deploy, run `pnpm run db:push` via SSH terminal to create all tables
+1. Create a MySQL database in Hostinger hPanel.
+2. Import the GitHub repo via hPanel → Websites → Add Website → Node.js App.
+3. Select Node **20.x** and set Startup File to **`server.js`**.
+4. Set environment variables in hPanel app settings (`DATABASE_URL`, `NEXT_PUBLIC_SITE_URL`, etc).
+5. Ensure Hostinger is configured to run `npm install` (using the native `package-lock.json` in this repo).
+6. After the successful first build, go to Hostinger SSH/Browser Terminal and run `npm run db:push` to construct the MySQL tables.
