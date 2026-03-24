@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
+import { eq } from 'drizzle-orm'
+import { getDb } from '@/db'
+import { subscribers } from '@/db/schema'
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy')
 
@@ -49,31 +50,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const payload = await getPayload({ config: configPromise })
+    const db = await getDb()
 
     // Check for existing subscriber
-    const existing = await payload.find({
-      collection: 'subscribers',
-      where: { email: { equals: email } },
-      limit: 1,
-    })
+    const existing = await db.select().from(subscribers).where(eq(subscribers.email, email)).limit(1)
 
-    if (existing.docs.length > 0) {
+    if (existing.length > 0) {
       // Already subscribed — return success silently (don't expose user data)
       return NextResponse.json({ success: true, message: 'You are already subscribed!' })
     }
 
     // Save to database
-    await payload.create({
-      collection: 'subscribers',
-      data: {
-        email,
-        firstName,
-        lastName,
-        source: source as any,
-        subscribedAt: new Date().toISOString(),
-        active: true,
-      },
+    await db.insert(subscribers).values({
+      email,
+      firstName,
+      lastName,
+      source,
+      subscribedAt: new Date(),
+      active: true,
     })
 
     // Send welcome email via Resend

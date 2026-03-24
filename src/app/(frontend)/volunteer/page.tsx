@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button } from '@payloadcms/ui'
 import { ArrowRight } from 'lucide-react'
 
 export const metadata = {
