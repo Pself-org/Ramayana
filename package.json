@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Ramayana Odyssey — Ancient Wisdom for Modern Life",
   "license": "MIT",
-  "type": "module",
   "main": "server.js",
   "scripts": {
     "build": "drizzle-kit push && next build",

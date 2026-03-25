@@ -1,12 +1,12 @@
-import { createServer } from 'node:http'
-import { parse } from 'node:url'
-import next from 'next'
+const { createServer } = require('node:http')
+const { parse } = require('node:url')
+const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
 const port = process.env.PORT || 3000
 // when using middleware `hostname` and `port` must be provided below
-const app = next.default({ dev, hostname, port })
+const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
