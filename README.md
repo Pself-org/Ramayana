@@ -67,11 +67,21 @@ npm run db:studio     # Open Drizzle Studio (visual DB editor)
 - **Email**: [Resend](https://resend.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 
-## Deployment (Hostinger Node.js Hosting)
+## Deployment (Hostinger Shared Node.js Web App)
 
-1. Create a MySQL database in Hostinger hPanel.
-2. Import the GitHub repo via hPanel → Websites → Add Website → Node.js App.
-3. Select Node **20.x** and set Startup File to **`server.js`**.
-4. Set environment variables in hPanel app settings (`DATABASE_URL`, `NEXT_PUBLIC_SITE_URL`, etc).
-5. Ensure Hostinger is configured to run `npm install` (using the native `package-lock.json` in this repo).
-6. After the successful first build, go to Hostinger SSH/Browser Terminal and run `npm run db:push` to construct the MySQL tables.
+Because Hostinger Shared Hosting Node Web Apps rely on **Phusion Passenger**, a few vital structural overrides have already been implemented in this repository to ensure compatibility:
+- **CommonJS Server:** The custom `server.js` was ported to CommonJS (`require()`), and `"type": "module"` was removed from `package.json` to prevent Passenger from crashing with a 503 error.
+- **Automated Database Migration:** Because `npm` is not in the `$PATH` for standard SSH users on Hostinger, the `package.json` build script automatically executes `drizzle-kit push` before building the Next.js site.
+
+### Hostinger hPanel Instructions
+
+1. **Create Database:** Create a MySQL database and user in Hostinger. 
+2. **Web App Settings:** Under advanced Node.js settings, choose the **Next.js** framework preset.
+3. **Crucial Build Settings:** 
+   - Ensure the **Package manager** is dropdown is set to `npm`. 
+   - Ensure the **Build command** is set to `npm run build`.
+   - **Important:** Make sure the **Output directory** is completely blank! (Do not leave it as `.next`, type `./` if you have to). This ensures Hostinger serves the `server.js` wrapper.
+4. **Environment Variables:** 
+   - Set your variables as normal. 
+   - **Crucial:** For your `DATABASE_URL`, Hostinger Node 20 resolves `localhost` to IPv6 which throws `Access Denied` errors. You must explicitly use `127.0.0.1` as the host (e.g. `mysql://user:pass@127.0.0.1:3306/db_name`).
+5. **Redeploy:** Click Save and Redeploy. The Hostinger pipeline will automatically run `npm run build`, which triggers the database tables to be built instantly!
