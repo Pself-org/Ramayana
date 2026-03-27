@@ -9,10 +9,17 @@ export async function GET() {
     const db = await getDb()
     
     // Manual schema patch for Hostinger since build-time drizzle-kit push might fail
+    // We use a multi-step approach since 'IF NOT EXISTS' is not supported in all MySQL/MariaDB versions
     try {
-      await db.execute(sql`ALTER TABLE podcast_episodes ADD COLUMN IF NOT EXISTS youtube_id VARCHAR(64)`)
-    } catch (e) {
-      console.log('Note: Column might already exist or auto-add failed:', e)
+      // Step 1: Just try to add it. If it exists, MySQL will throw an error we can catch.
+      await db.execute(sql`ALTER TABLE podcast_episodes ADD youtube_id VARCHAR(64)`)
+    } catch (e: any) {
+      // 1060 is the error code for 'Duplicate column name'
+      if (e.errno === 1060 || e.code === 'ER_DUP_FIELDNAME') {
+        console.log('youtube_id column already exists.')
+      } else {
+        console.error('Failed to add column:', e)
+      }
     }
 
     let inserted = 0
