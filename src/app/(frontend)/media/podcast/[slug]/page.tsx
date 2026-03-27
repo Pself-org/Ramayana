@@ -55,11 +55,20 @@ export default async function PodcastEpisodePage({ params }: Props) {
           <h1 style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', color: 'var(--color-pearl)', marginBottom: '1rem' }}>
             {ep.title}
           </h1>
-          {ep.audioUrl && (
+          {ep.youtubeId ? (
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '800px', margin: '1.25rem 0', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <iframe 
+                src={`https://www.youtube.com/embed/${ep.youtubeId}?autoplay=1`} 
+                allow="autoplay; encrypted-media" 
+                allowFullScreen 
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }} 
+              />
+            </div>
+          ) : ep.audioUrl ? (
             <audio controls style={{ width: '100%', maxWidth: '640px', margin: '1.25rem 0', accentColor: '#EEAA00' }}>
               <source src={ep.audioUrl} type="audio/mpeg" />
             </audio>
-          )}
+          ) : null}
         </div>
       </div>
 

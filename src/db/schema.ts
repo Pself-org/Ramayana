@@ -49,6 +49,7 @@ export const podcastEpisodes = mysqlTable('podcast_episodes', {
   slug: varchar('slug', { length: 512 }).notNull().unique(),
   description: text('description'),
   audioUrl: varchar('audio_url', { length: 1024 }),
+  youtubeId: varchar('youtube_id', { length: 64 }),
   duration: varchar('duration', { length: 64 }),
   seoTitle: varchar('seo_title', { length: 512 }),
   seoDescription: text('seo_description'),

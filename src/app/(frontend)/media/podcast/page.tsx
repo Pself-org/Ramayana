@@ -76,11 +76,19 @@ export default async function PodcastPage() {
                       <Clock size={13} /> {ep.duration}
                     </div>
                   )}
-                  {ep.audioUrl && (
+                  {ep.youtubeId ? (
+                    <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%', borderRadius: '0.75rem', marginBottom: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <iframe 
+                        src={`https://www.youtube.com/embed/${ep.youtubeId}`} 
+                        allowFullScreen 
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }} 
+                      />
+                    </div>
+                  ) : ep.audioUrl ? (
                     <audio controls style={{ width: '100%', maxWidth: '480px', marginBottom: '0.875rem', accentColor: '#EEAA00' }}>
                       <source src={ep.audioUrl} type="audio/mpeg" />
                     </audio>
-                  )}
+                  ) : null}
                   <div style={{ display: 'flex', gap: '0.625rem', flexWrap: 'wrap' }}>
                     <Link href={`/media/podcast/${ep.slug}`} className="btn-primary" style={{ fontSize: '0.82rem', padding: '0.45rem 1rem' }}>
                       <Play size={13} /> Full Episode
